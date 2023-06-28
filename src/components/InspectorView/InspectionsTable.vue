@@ -5,8 +5,14 @@ import { useFirestore } from 'vuefire';
 const db = useFirestore();
 
 import { useCollection } from 'vuefire';
-import { Timestamp, collection } from 'firebase/firestore';
-const inspections = useCollection(collection(db, 'inspections'));
+import { collection, query, orderBy } from 'firebase/firestore';
+const q = query(collection(db, 'inspections'), orderBy('date'))
+const inspections = useCollection(q);
+
+import router from '@/router';
+function viewInspection(id: string) {
+  router.push(`/dashboard/inspection/${id}`)
+}
 
 </script>
 <template>
@@ -28,7 +34,7 @@ const inspections = useCollection(collection(db, 'inspections'));
       </tr>
     </thead>
     <tbody>
-      <tr class="hover:cursor-pointer hover:bg-slate-200" v-for="(inspection, index) in inspections" :key="index">
+      <tr class="hover:cursor-pointer hover:bg-slate-200" v-for="(inspection, index) in inspections" :key="index" @click="viewInspection(inspection?.id)">
         <td class="px-2 font-medium">
           {{ fns.format(new Date(inspection.date.seconds * 1000), "PPp") }}
         </td>

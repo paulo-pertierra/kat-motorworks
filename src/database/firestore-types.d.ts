@@ -8,7 +8,7 @@ export type Vehicle = {
   driver: string;
 }
 
-type Result = "GOOD"|"MAINTAIN"|"REPLACE"|"MISSING"
+type Result = "GOOD"|"BAD"|"MAINTAIN"|"MISSING"
 export interface Inspection {
   vehicleId: string;
   inspector: string;
@@ -18,7 +18,7 @@ export interface Inspection {
     leftSpring: Result;
     wheelBearing: Result;
     brakeShoe: Result;
-    brakeChamger: Result;
+    brakeChamber: Result;
     centerBolt: Result;
     uBolt: Result;
     steering: Result;

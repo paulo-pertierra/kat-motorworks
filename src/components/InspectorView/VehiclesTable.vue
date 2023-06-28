@@ -16,7 +16,7 @@ function selectVehicle(vehicle: Vehicle) {
 }
 </script>
 <template>
-  <div class="col-span-2 lg:col-span-1 border-2 w-full h-96">
+  <div class="col-span-2 border-2 w-full h-96">
     <h2 class="text-xl px-4 py-2">Vehicles</h2>
     <div class="relative overflow-x-auto">
       <table class="w-full">

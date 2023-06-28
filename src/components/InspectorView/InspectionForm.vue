@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { useFirebaseAuth } from 'vuefire';
+import { useCurrentUser, useFirebaseAuth } from 'vuefire';
 const auth = useFirebaseAuth()!;
 
 console.log(auth?.currentUser?.displayName)
@@ -16,16 +16,19 @@ import { useInspectionStore } from '@/stores/inspection';
 import type { Inspection } from '@/database/firestore-types';
 const inspection = useInspectionStore();
 
+const user = useCurrentUser()!
+const userEmail = user.value?.email || "Unknown: Refer to Admin"
+
 const inspectionFormData: Inspection = reactive({
   vehicleId: inspection.vehicleId,
-  inspector: "GOOD",
+  inspector: userEmail,
   date: Timestamp.fromDate(new Date()),
   underChassis: {
     differential: "GOOD",
     leftSpring: "GOOD",
     wheelBearing: "GOOD",
     brakeShoe: "GOOD",
-    brakeChamger: "GOOD",
+    brakeChamber: "GOOD",
     centerBolt: "GOOD",
     uBolt: "GOOD",
     steering: "GOOD",
@@ -84,6 +87,8 @@ async function uploadInspection() {
   }
   await uploadToVehicleDoc();
   await uploadToInspectionsColl();
+
+  inspection.vehicleId = "";
 }
 </script>
 
@@ -100,7 +105,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.differential">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -109,7 +114,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.leftSpring">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -118,7 +123,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.wheelBearing">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -127,7 +132,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.brakeShoe">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -136,7 +141,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.centerBolt">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -145,7 +150,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.uBolt">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -154,7 +159,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.steering">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -163,7 +168,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.gearBox">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -172,7 +177,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.airTank">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -182,7 +187,7 @@ async function uploadInspection() {
             v-model="inspectionFormData.underChassis.hydroVacAssembly">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -192,7 +197,7 @@ async function uploadInspection() {
             v-model="inspectionFormData.underChassis.clutchBooster9070">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -202,7 +207,7 @@ async function uploadInspection() {
             v-model="inspectionFormData.underChassis.propellerShaft">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -211,7 +216,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.brakeMaster">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -220,7 +225,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.underChassis.primaryClutch">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -231,7 +236,7 @@ async function uploadInspection() {
         <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.transmissionAssembly">
           <option value="GOOD">Good Condition</option>
           <option value="MAINTAIN">Needs Maintenance</option>
-          <option value="REPLACE">Needs Replacement</option>
+          <option value="BAD">Bad Condition</option>
           <option value="MISSING">Missing</option>
         </select>
       </div>
@@ -241,7 +246,7 @@ async function uploadInspection() {
         <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.engineAssembly">
           <option value="GOOD">Good Condition</option>
           <option value="MAINTAIN">Needs Maintenance</option>
-          <option value="REPLACE">Needs Replacement</option>
+          <option value="BAD">Bad Condition</option>
           <option value="MISSING">Missing</option>
         </select>
       </div>
@@ -252,7 +257,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.headLight">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -261,7 +266,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.domeLamp">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -270,7 +275,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.wiper">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -279,7 +284,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.tireWrench">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -288,7 +293,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.signalLight">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -297,7 +302,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.sunVisor">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -306,7 +311,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.seatBelt">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -315,7 +320,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.earlyWarningDevice">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -324,7 +329,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.tailLight">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -333,7 +338,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.sideViewMirror">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -342,7 +347,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.radiatorCap">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -351,7 +356,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.carJack">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -360,7 +365,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.fogLamp">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -369,7 +374,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.fuelTankCap">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -378,7 +383,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.antenna">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -387,7 +392,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.tools">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -396,7 +401,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.horn">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -405,7 +410,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.wheelCaps">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -414,7 +419,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.stereo">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
@@ -423,7 +428,7 @@ async function uploadInspection() {
           <select class="rounded-lg" name="uc-differential" id="" v-model="inspectionFormData.electricalParts.spareTire">
             <option value="GOOD">Good Condition</option>
             <option value="MAINTAIN">Needs Maintenance</option>
-            <option value="REPLACE">Needs Replacement</option>
+            <option value="BAD">Bad Condition</option>
             <option value="MISSING">Missing</option>
           </select>
         </div>
