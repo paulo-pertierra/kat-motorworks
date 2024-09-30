@@ -13,6 +13,7 @@ export interface Inspection {
   vehicleId: string;
   inspector: string;
   date: Timestamp;
+  ltoRegistration: "VALID"|"EXPIRED"|"NO REGISTRATION";
   underChassis: {
     differential: Result;
     leftSpring: Result;
